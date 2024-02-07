@@ -1,8 +1,8 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const http = require('http');
 const socketio = require('socket.io');
 const cors = require('cors');
+const path = require('path'); // Add path module for serving static files
 
 // Import DB config
 const connectDB = require('./config/db');
@@ -17,6 +17,7 @@ const io = socketio(server);
 // Middleware
 app.use(cors());
 app.use(express.json()); // For parsing application/json
+
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -44,6 +45,28 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('User has left');
     });
+});
+
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+
+// Serve index.html as the default page
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.get('/styles.css', (req, res) => {
+    res.set('Content-Type', 'text/css');
+    res.sendFile(path.join(__dirname, 'public', 'styles.css'));
+});
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+app.get('/signup', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'signup.html'));
 });
 
 const PORT = process.env.PORT || 5000;
