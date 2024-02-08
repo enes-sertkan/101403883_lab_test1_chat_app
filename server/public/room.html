@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room - Chat App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Chat Room</h1>
+        <p>Room Name: <span id="room-name"></span></p>
+        <button id="logout-btn">Logout</button> <!-- Logout button -->
+        <button id="create-room-btn">Create/Join Room</button> <!-- Create/Join Room button -->
+    </header>
+    <main id="chat-messages">
+        <!-- Chat messages will be displayed here -->
+    </main>
+    <footer>
+        <form id="message-form">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button type="submit">Send</button>
+        </form>
+    </footer>
+    <script>
+        // Function to display a chat message
+        function displayMessage(message) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.innerText = message;
+            document.getElementById('chat-messages').appendChild(messageElement);
+        }
+
+        // Function to display typing action
+        function displayTypingAction(user) {
+            const typingElement = document.createElement('div');
+            typingElement.classList.add('typing');
+            typingElement.innerText = `${user} is typing...`;
+            document.getElementById('chat-messages').appendChild(typingElement);
+        }
+
+        // Logout button event listener
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            window.location.href = '/login';
+        });
+
+        // Create/Join Room button event listener
+        document.getElementById('create-room-btn').addEventListener('click', () => {
+            window.location.href = '/create-room.html';
+        });
+
+        document.getElementById('message-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const message = document.getElementById('message-input').value;
+
+            try {
+                const response = await fetch('/api/chat/message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message })
+                });
+
+                const data = await response.json();
+                console.log(data);
+                displayMessage(`Me: ${message}`);
+            } catch (error) {
+                console.error(error.message);
+                alert('Server error. Please try again later.');
+            }
+        });
+    </script>
+</body>
+</html>

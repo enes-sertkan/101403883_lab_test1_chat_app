@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Selection - Chat App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Room Selection</h1>
+    </header>
+    <main>
+        <form id="create-room-form">
+            <label for="room-name">Room Name:</label>
+            <input type="text" id="room-name" name="room-name" required>
+            <button type="submit">Create/Join Room</button>
+        </form>
+    </main>
+    <footer>
+        <p>Enes Sertkan 101403883</p>
+    </footer>
+    <script>
+        document.getElementById('create-room-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const roomName = document.getElementById('room-name').value;
+
+            try {
+                const response = await fetch('/api/chat/message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ room: roomName })
+                });
+
+                const data = await response.json();
+                console.log(data);
+                window.location.href = '/room.html?room=' + encodeURIComponent(roomName);
+            } catch (error) {
+                console.error(error.message);
+                alert('Server error. Please try again later.');
+            }
+        });
+    </script>
+</body>
+</html>

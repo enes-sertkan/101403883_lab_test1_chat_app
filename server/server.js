@@ -2,13 +2,13 @@ const express = require('express');
 const http = require('http');
 const socketio = require('socket.io');
 const cors = require('cors');
-const path = require('path'); // Add path module for serving static files
+const path = require('path');
 
 // Import DB config
 const connectDB = require('./config/db');
 
 // Connect to MongoDB
-connectDB(); // This should come after importing connectDB
+connectDB();
 
 const app = express();
 const server = http.createServer(app);
@@ -16,7 +16,7 @@ const io = socketio(server);
 
 // Middleware
 app.use(cors());
-app.use(express.json()); // For parsing application/json
+app.use(express.json());
 
 
 // Import routes
@@ -31,17 +31,12 @@ app.use('/api/chat', chatRoutes);
 io.on('connection', (socket) => {
     console.log('New WebSocket connection');
 
-    // Example: on joining a room
     socket.on('joinRoom', ({ username, room }) => {
-        // Implement joining a room
     });
 
-    // Example: on chat message
     socket.on('sendMessage', (message) => {
-        // Implement sending a message
     });
 
-    // Example: on disconnect
     socket.on('disconnect', () => {
         console.log('User has left');
     });

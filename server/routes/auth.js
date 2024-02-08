@@ -60,6 +60,15 @@ router.post('/login', async (req, res) => {
     }
 });
 
-
+// POST /api/auth/logout - Logout user
+router.post('/logout', async (req, res) => {
+    try {
+        req.session.destroy();
+        res.status(200).json({ msg: 'User logged out successfully' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
 
 module.exports = router;
