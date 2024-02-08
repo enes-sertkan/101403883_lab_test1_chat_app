@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
-const Message = require('../models/Message');
-const Room = require('../models/Room');
+const Message = require('../models/Message'); // Adjust the path as necessary
 
-// POST /api/chat/message - Store a new chat message or create/join a room
+// POST /api/chat/message - Store a new chat message
 router.post('/message', [
     check('from_user', 'Sender username is required').not().isEmpty(),
     check('room', 'Room name is required').not().isEmpty(),
@@ -18,14 +17,6 @@ router.post('/message', [
     const { from_user, room, message } = req.body;
 
     try {
-        // Check if the room exists, if not, create it
-        let existingRoom = await Room.findOne({ name: room });
-        if (!existingRoom) {
-            existingRoom = new Room({ name: room });
-            await existingRoom.save();
-        }
-
-        // Store the message in the database
         const newMessage = new Message({
             from_user,
             room,
