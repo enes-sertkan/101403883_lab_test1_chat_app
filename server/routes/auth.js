@@ -36,23 +36,18 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Step 1: Check if the user exists
         let user = await User.findOne({ email });
 
-        // Step 2: Verify user existence
         if (!user) {
             console.log('User not found');
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
-
-        // Step 3: Verify password matching
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             console.log('Password does not match');
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
 
-        // Step 4: Authentication successful
         console.log('User logged in successfully');
         res.json({ msg: 'User logged in successfully' });
     } catch (err) {
